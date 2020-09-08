@@ -32,7 +32,6 @@ HASH_NODE *hashFind(char *text){
 }
 
 HASH_NODE *hashInsert(char *text, int type){
-	printf("oi");
 	HASH_NODE *newnode;
 	int address = hashAddress(text);
 	

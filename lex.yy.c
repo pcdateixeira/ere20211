@@ -900,7 +900,7 @@ return LIT_FALSE;
 case 20:
 YY_RULE_SETUP
 #line 43 "scanner.l"
-printf("oi"); *Table = hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER;
+*Table = hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP

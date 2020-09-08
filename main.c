@@ -31,13 +31,13 @@ int main(int argc, char ** argv){
 	
 	initMe();
 	
-	printf("Tabela de símbolos:\n");
-	hashPrint();
+	printf("Análise sintática começando...\n");	
+	yyparse();
+	printf("Análise sintática concluída.\n");
 	printf("\n---\n\n");
 	
-	printf("Análise sintática começando...\n");	
-	//yyparse();
-	printf("Análise sintática concluída.\n");
+	printf("Tabela de símbolos:\n");
+	hashPrint();
 	
 	exit(0);
 }

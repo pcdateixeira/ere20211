@@ -33,7 +33,11 @@
 programa: decl
 	;
 
-decl: dec ',' decl
+decl: dec resto
+	|
+	;
+
+resto: ',' dec resto
 	|
 	;
 
@@ -48,13 +52,21 @@ lcmd: cmd lcmd
 	|
 	;
 
-cmd: TK_IDENTIFIER '=' LIT_INTEGER
+cmd: TK_IDENTIFIER '=' expr
+	;
+
+expr: LIT_INTEGER
+	| TK_IDENTIFIER
+	| expr '+' expr
+	| expr '-' expr
+	| expr OPERATOR_EQ expr
+	| '(' expr ')'
 	;
 
 %%
 
 int yyerror(){
-	fprintf(stderr, "Syntax error./n");
+	fprintf(stderr, "Syntax error at line %d.\n", getLineNumber());
 	exit(3);
 }
 

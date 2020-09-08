@@ -32,14 +32,12 @@
 
 %%
 
-programa: lcmd
+programa: ldec
 	;
 	
-lcmd: cmd ';' lcmd
+ldec: globalvar ';' ldec
+	| cmd ';' ldec
 	|
-	;
-
-cmd: globalvar
 	;
 
 globalvar: type TK_IDENTIFIER '=' initvalue
@@ -66,6 +64,28 @@ initvecvalue: ':' initvalue rvecvalue
 
 rvecvalue: initvalue rvecvalue
 	|
+	;
+
+cmd: TK_IDENTIFIER '=' expr
+	| TK_IDENTIFIER '[' expr ']' '=' expr
+	|
+	;
+
+expr: TK_IDENTIFIER
+	| TK_IDENTIFIER '[' expr ']'
+	| initvalue
+	| expr '+' expr
+	| expr '-' expr
+	| expr '*' expr
+	| expr '/' expr
+	| expr '<' expr
+	| expr '>' expr
+	| expr '~' expr
+	| expr OPERATOR_LE expr
+	| expr OPERATOR_GE expr
+	| expr OPERATOR_EQ expr
+	| expr OPERATOR_DIF expr
+	| '(' expr ')'
 	;
 
 %%

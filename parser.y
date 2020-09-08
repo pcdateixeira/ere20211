@@ -30,6 +30,11 @@
 
 %token TOKEN_ERROR
 
+%left '|' '&' '.' 'v' '~'
+%left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
+%left '+' '-'
+%left '*' '/'
+
 %%
 
 programa: ldec
@@ -80,6 +85,10 @@ expr: TK_IDENTIFIER
 	| expr '/' expr
 	| expr '<' expr
 	| expr '>' expr
+	| expr '|' expr
+	| expr '&' expr
+	| expr '.' expr
+	| expr 'v' expr
 	| expr '~' expr
 	| expr OPERATOR_LE expr
 	| expr OPERATOR_GE expr

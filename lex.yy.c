@@ -515,7 +515,7 @@ char *yytext;
 
 	//
 	// INF01147 - Compiladores B - 2020/1
-	// Trabalho Pratico, Etapa 1: Analise Lexica e Inicializacao da Tabela de Simbolos
+	// Trabalho Pratico, Etapa 2: Analise Sintatica e Preenchimento da Tabela de Simbolos
 	// Nome: Pedro Caetano de Abreu Teixeira
 	// Numero do cartao: 00228509
 	
@@ -900,28 +900,28 @@ return LIT_FALSE;
 case 20:
 YY_RULE_SETUP
 #line 43 "scanner.l"
-*Table = hashInsert(yytext); return TK_IDENTIFIER;
+*Table = hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
 #line 45 "scanner.l"
-*Table = hashInsert(yytext); return LIT_INTEGER;
+*Table = hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER;
 	YY_BREAK
 case 22:
 YY_RULE_SETUP
 #line 46 "scanner.l"
-*Table = hashInsert(yytext); return LIT_FLOAT;
+*Table = hashInsert(yytext, LIT_FLOAT); return LIT_FLOAT;
 	YY_BREAK
 case 23:
 YY_RULE_SETUP
 #line 47 "scanner.l"
-*Table = hashInsert(yytext); return LIT_CHAR;
+*Table = hashInsert(yytext, LIT_CHAR); return LIT_CHAR;
 	YY_BREAK
 case 24:
 /* rule 24 can match eol */
 YY_RULE_SETUP
 #line 48 "scanner.l"
-*Table = hashInsert(yytext); return LIT_STRING;
+*Table = hashInsert(yytext, LIT_STRING); return LIT_STRING;
 	YY_BREAK
 case 25:
 /* rule 25 can match eol */

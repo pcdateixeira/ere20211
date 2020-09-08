@@ -2,7 +2,7 @@
 
 	//
 	// INF01147 - Compiladores B - 2020/1
-	// Trabalho Pratico, Etapa 1: Analise Lexica e Inicializacao da Tabela de Simbolos
+	// Trabalho Pratico, Etapa 2: Analise Sintatica e Preenchimento da Tabela de Simbolos
 	// Nome: Pedro Caetano de Abreu Teixeira
 	// Numero do cartao: 00228509
 	
@@ -40,12 +40,12 @@
 "TRUE"							return LIT_TRUE;
 "FALSE"							return LIT_FALSE;
 
-[A-Za-z@_][A-Za-z@_0-9]*		*Table = hashInsert(yytext); return TK_IDENTIFIER;
+[A-Za-z@_][A-Za-z@_0-9]*		*Table = hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER;
 
-[0-9][0-9A-F]*					*Table = hashInsert(yytext); return LIT_INTEGER;
-([0-9][0-9A-F]*)*\.[0-9A-F]+	*Table = hashInsert(yytext); return LIT_FLOAT;
-'.'								*Table = hashInsert(yytext); return LIT_CHAR;
-["]([^"\\\n]|\\.|\\\n)*["]		*Table = hashInsert(yytext); return LIT_STRING;
+[0-9][0-9A-F]*					*Table = hashInsert(yytext, LIT_INTEGER); return LIT_INTEGER;
+([0-9][0-9A-F]*)*\.[0-9A-F]+	*Table = hashInsert(yytext, LIT_FLOAT); return LIT_FLOAT;
+'.'								*Table = hashInsert(yytext, LIT_CHAR); return LIT_CHAR;
+["]([^"\\\n]|\\.|\\\n)*["]		*Table = hashInsert(yytext, LIT_STRING); return LIT_STRING;
 
 "\n"							incLineNumber();
 

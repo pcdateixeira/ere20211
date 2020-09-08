@@ -35,6 +35,10 @@
 *.i*86
 *.x86_64
 *.hex
+etapa2
+
+# Input files
+*.txt
 
 # Debug files
 *.dSYM/

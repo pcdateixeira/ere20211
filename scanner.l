@@ -6,7 +6,7 @@
 	// Nome: Pedro Caetano de Abreu Teixeira
 	// Numero do cartao: 00228509
 	
-	#include "tokens.h"
+	#include "y.tab.h"
 	#include "hash.c"
 	#include "utils.c"
 %}
@@ -61,9 +61,9 @@
 
 %%
 
+#include "y.tab.c"
 #include "main.c"
-int yywrap()
-{
+int yywrap(){
 	stopRunning();
 	return 1;
 }

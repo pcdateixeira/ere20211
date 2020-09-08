@@ -519,7 +519,7 @@ char *yytext;
 	// Nome: Pedro Caetano de Abreu Teixeira
 	// Numero do cartao: 00228509
 	
-	#include "tokens.h"
+	#include "y.tab.h"
 	#include "hash.c"
 	#include "utils.c"
 #line 526 "lex.yy.c"
@@ -900,7 +900,7 @@ return LIT_FALSE;
 case 20:
 YY_RULE_SETUP
 #line 43 "scanner.l"
-*Table = hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER;
+printf("oi"); *Table = hashInsert(yytext, TK_IDENTIFIER); return TK_IDENTIFIER;
 	YY_BREAK
 case 21:
 YY_RULE_SETUP
@@ -1979,9 +1979,9 @@ void yyfree (void * ptr )
 #line 62 "scanner.l"
 
 
+#include "y.tab.c"
 #include "main.c"
-int yywrap()
-{
+int yywrap(){
 	stopRunning();
 	return 1;
 }

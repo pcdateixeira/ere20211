@@ -3,6 +3,8 @@
 %token KW_INT
 %token KW_FLOAT
 %token KW_BOOL
+%token KW_BYTE
+%token KW_LONG
 
 %token KW_IF
 %token KW_THEN
@@ -30,37 +32,40 @@
 
 %%
 
-programa: decl
-	;
-
-decl: dec resto
-	|
-	;
-
-resto: ',' dec resto
-	|
-	;
-
-dec: KW_INT TK_IDENTIFIER
-	| KW_INT TK_IDENTIFIER '(' ')' body
+programa: lcmd
 	;
 	
-body: '{' lcmd '}'
-	;
-
-lcmd: cmd lcmd
+lcmd: cmd ';' lcmd
 	|
 	;
 
-cmd: TK_IDENTIFIER '=' expr
+cmd: globalvar
 	;
 
-expr: LIT_INTEGER
-	| TK_IDENTIFIER
-	| expr '+' expr
-	| expr '-' expr
-	| expr OPERATOR_EQ expr
-	| '(' expr ')'
+globalvar: type TK_IDENTIFIER '=' initvalue
+	| type TK_IDENTIFIER '[' LIT_INTEGER ']' initvecvalue
+	;
+
+type: KW_INT
+	| KW_FLOAT
+	| KW_BOOL
+	| KW_BYTE
+	| KW_LONG
+	;
+
+initvalue: LIT_INTEGER
+	| LIT_FLOAT
+	| LIT_CHAR
+	| LIT_TRUE
+	| LIT_FALSE
+	;
+
+initvecvalue: ':' initvalue rvecvalue
+	|
+	;
+
+rvecvalue: initvalue rvecvalue
+	|
 	;
 
 %%

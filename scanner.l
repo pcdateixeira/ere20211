@@ -20,6 +20,8 @@
 "int" 							return KW_INT;
 "float" 						return KW_FLOAT;
 "bool" 							return KW_BOOL;
+"byte"							return KW_BYTE;
+"long"							return KW_LONG;
 
 "if" 							return KW_IF;
 "then" 							return KW_THEN;

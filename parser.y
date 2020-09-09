@@ -123,6 +123,7 @@ expr: TK_IDENTIFIER
 	| expr OPERATOR_EQ expr
 	| expr OPERATOR_DIF expr
 	| '(' expr ')'
+	| TK_IDENTIFIER '(' funcarg ')'
 	;
 
 printvalue: LIT_STRING rprintvalue
@@ -130,6 +131,14 @@ printvalue: LIT_STRING rprintvalue
 	;
 
 rprintvalue: ',' printvalue
+	|
+	;
+
+funcarg: expr rfuncarg
+	|
+	;
+
+rfuncarg: ',' expr rfuncarg
 	|
 	;
 

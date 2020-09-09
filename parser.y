@@ -145,7 +145,7 @@ rfuncarg: ',' expr rfuncarg
 %%
 
 int yyerror(){
-	fprintf(stderr, "Syntax error at line %d.\n", getLineNumber());
+	fprintf(stderr, "Erro de sintaxe na linha %d.\n", getLineNumber());
 	exit(3);
 }
 

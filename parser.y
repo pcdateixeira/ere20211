@@ -43,7 +43,6 @@ programa: ldec
 	
 ldec: globalvar ';' ldec
 	| body ldec
-	| cmd ldec
 	|
 	;
 

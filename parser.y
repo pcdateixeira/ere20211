@@ -42,7 +42,7 @@ programa: ldec
 	;
 	
 ldec: globalvar ';' ldec
-	| body ldec
+	| function ldec
 	|
 	;
 
@@ -69,6 +69,17 @@ initvecvalue: ':' initvalue rvecvalue
 	;
 
 rvecvalue: initvalue rvecvalue
+	|
+	;
+
+function: type TK_IDENTIFIER '(' funcparam ')' body
+	;
+
+funcparam: type TK_IDENTIFIER rfuncparam
+	|
+	;
+
+rfuncparam: ',' type TK_IDENTIFIER rfuncparam
 	|
 	;
 

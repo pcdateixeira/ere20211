@@ -42,7 +42,8 @@ programa: ldec
 	;
 	
 ldec: globalvar ';' ldec
-	| cmd ';' ldec
+	| body ldec
+	| cmd ldec
 	|
 	;
 
@@ -72,6 +73,13 @@ rvecvalue: initvalue rvecvalue
 	|
 	;
 
+body: '{' lcmd '}'
+	;
+
+lcmd: cmd ';' lcmd
+	|
+	;
+
 cmd: TK_IDENTIFIER '=' expr
 	| TK_IDENTIFIER '[' expr ']' '=' expr
 	| KW_IF '(' expr ')' KW_THEN cmd
@@ -82,6 +90,7 @@ cmd: TK_IDENTIFIER '=' expr
 	| KW_READ TK_IDENTIFIER
 	| KW_RETURN expr
 	| KW_PRINT printvalue
+	| body
 	|
 	;
 

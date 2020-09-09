@@ -10,10 +10,11 @@
 %token KW_THEN
 %token KW_ELSE
 %token KW_WHILE
-%token KW_LOOP
+%token KW_FOR
 %token KW_READ
 %token KW_PRINT
 %token KW_RETURN
+%token KW_BREAK
 
 %token OPERATOR_LE
 %token OPERATOR_GE
@@ -73,6 +74,13 @@ rvecvalue: initvalue rvecvalue
 
 cmd: TK_IDENTIFIER '=' expr
 	| TK_IDENTIFIER '[' expr ']' '=' expr
+	| KW_IF '(' expr ')' KW_THEN cmd
+	| KW_IF '(' expr ')' KW_THEN cmd KW_ELSE cmd
+	| KW_WHILE '(' expr ')' cmd
+	| KW_FOR '(' TK_IDENTIFIER ':' expr ',' expr ',' expr ')' cmd
+	| KW_BREAK
+	| KW_READ TK_IDENTIFIER
+	| KW_RETURN expr
 	|
 	;
 

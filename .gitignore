@@ -50,6 +50,7 @@ etapa2
 *.su
 *.idb
 *.pdb
+y.output
 
 # Kernel Module Compile Results
 *.mod*

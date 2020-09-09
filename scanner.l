@@ -27,10 +27,11 @@
 "then" 							return KW_THEN;
 "else" 							return KW_ELSE;
 "while" 						return KW_WHILE;
-"loop" 							return KW_LOOP;
+"for" 							return KW_FOR;
 "read" 							return KW_READ;
 "print" 						return KW_PRINT;
 "return" 						return KW_RETURN;
+"break"							return KW_BREAK;
 
 [,;:()\[\]{}+\-*/<>=|\^~&$#]	return yytext[0];
 

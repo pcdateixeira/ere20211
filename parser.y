@@ -81,6 +81,7 @@ cmd: TK_IDENTIFIER '=' expr
 	| KW_BREAK
 	| KW_READ TK_IDENTIFIER
 	| KW_RETURN expr
+	| KW_PRINT printvalue
 	|
 	;
 
@@ -103,6 +104,14 @@ expr: TK_IDENTIFIER
 	| expr OPERATOR_EQ expr
 	| expr OPERATOR_DIF expr
 	| '(' expr ')'
+	;
+
+printvalue: LIT_STRING rprintvalue
+	| expr rprintvalue
+	;
+
+rprintvalue: ',' printvalue
+	|
 	;
 
 %%

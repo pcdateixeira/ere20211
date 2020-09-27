@@ -7,6 +7,7 @@
 	// Numero do cartao: 00228509
 	
 	#include "hash.h"
+	#include "ast.h"
 	#include "y.tab.h"
 	#include "utils.h"
 %}
@@ -40,15 +41,15 @@
 "=="							return OPERATOR_EQ;
 "!="							return OPERATOR_DIF;
 
-"TRUE"							hashInsert(yytext, SYMBOL_LIT_TRUE); return LIT_TRUE;
-"FALSE"							hashInsert(yytext, SYMBOL_LIT_FALSE); return LIT_FALSE;
+"TRUE"							yylval.symbol = hashInsert(yytext, SYMBOL_LIT_TRUE); return LIT_TRUE;
+"FALSE"							yylval.symbol = hashInsert(yytext, SYMBOL_LIT_FALSE); return LIT_FALSE;
 
 [A-Za-z@_][A-Za-z@_0-9]*		yylval.symbol = hashInsert(yytext, SYMBOL_IDENTIFIER); return TK_IDENTIFIER;
 
 [0-9][0-9A-F]*					yylval.symbol = hashInsert(yytext, SYMBOL_LIT_INTEGER); return LIT_INTEGER;
-([0-9][0-9A-F]*)*\.[0-9A-F]+	hashInsert(yytext, SYMBOL_LIT_FLOAT); return LIT_FLOAT;
-'.'								hashInsert(yytext, SYMBOL_LIT_CHAR); return LIT_CHAR;
-["]([^"\\\n]|\\.|\\\n)*["]		hashInsert(yytext, SYMBOL_LIT_STRING); return LIT_STRING;
+([0-9][0-9A-F]*)*\.[0-9A-F]+	yylval.symbol = hashInsert(yytext, SYMBOL_LIT_FLOAT); return LIT_FLOAT;
+'.'								yylval.symbol = hashInsert(yytext, SYMBOL_LIT_CHAR); return LIT_CHAR;
+["]([^"\\\n]|\\.|\\\n)*["]		yylval.symbol = hashInsert(yytext, SYMBOL_LIT_STRING); return LIT_STRING;
 
 "\n"							incLineNumber();
 

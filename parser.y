@@ -1,5 +1,6 @@
 %{
 	#include "hash.h"
+	#include "ast.h"
 	#include "utils.h"
 	int yyerror();
 	int yylex();
@@ -8,6 +9,7 @@
 %union
 {
 	HASH_NODE *symbol;
+	AST *ast;
 }
 
 
@@ -32,16 +34,20 @@
 %token OPERATOR_GE
 %token OPERATOR_EQ
 %token OPERATOR_DIF
-%token TK_IDENTIFIER
+%token<symbol> TK_IDENTIFIER
 
 %token<symbol> LIT_INTEGER
-%token LIT_FLOAT
-%token LIT_TRUE
-%token LIT_FALSE
-%token LIT_CHAR
+%token<symbol> LIT_FLOAT
+%token<symbol> LIT_TRUE
+%token<symbol> LIT_FALSE
+%token<symbol> LIT_CHAR
 %token LIT_STRING
 
 %token TOKEN_ERROR
+
+%type<ast> initvalue
+%type<ast> expr
+%type<ast> funcarg
 
 %left '|' '&' '.' 'v' '~'
 %left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
@@ -69,11 +75,11 @@ type: KW_INT
 	| KW_LONG
 	;
 
-initvalue: LIT_INTEGER { fprintf(stderr, "Recebi %s\n", $1->text); }
-	| LIT_FLOAT
-	| LIT_CHAR
-	| LIT_TRUE
-	| LIT_FALSE
+initvalue: LIT_INTEGER { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
+	| LIT_FLOAT { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
+	| LIT_CHAR { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
+	| LIT_TRUE { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
+	| LIT_FALSE { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
 	;
 
 initvecvalue: ':' initvalue rvecvalue
@@ -102,7 +108,7 @@ lcmd: cmd ';' lcmd
 	|
 	;
 
-cmd: TK_IDENTIFIER '=' expr
+cmd: TK_IDENTIFIER '=' expr { astPrint($3, 0); }
 	| TK_IDENTIFIER '[' expr ']' '=' expr
 	| KW_IF '(' expr ')' KW_THEN cmd
 	| KW_IF '(' expr ')' KW_THEN cmd KW_ELSE cmd
@@ -116,11 +122,11 @@ cmd: TK_IDENTIFIER '=' expr
 	|
 	;
 
-expr: TK_IDENTIFIER
-	| TK_IDENTIFIER '[' expr ']'
+expr: TK_IDENTIFIER { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
+	| TK_IDENTIFIER '[' expr ']' { $$ = astCreate(AST_VEC_SYMBOL, $1, $3, 0, 0, 0, 0, 0); }
 	| initvalue
-	| expr '+' expr
-	| expr '-' expr
+	| expr '+' expr { $$ = astCreate(AST_ADD, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '-' expr { $$ = astCreate(AST_SUB, 0, $1, $3, 0, 0, 0, 0); }
 	| expr '*' expr
 	| expr '/' expr
 	| expr '<' expr
@@ -134,8 +140,8 @@ expr: TK_IDENTIFIER
 	| expr OPERATOR_GE expr
 	| expr OPERATOR_EQ expr
 	| expr OPERATOR_DIF expr
-	| '(' expr ')'
-	| TK_IDENTIFIER '(' funcarg ')'
+	| '(' expr ')' { $$ = $2; }
+	| TK_IDENTIFIER '(' funcarg ')' { $$ = astCreate(AST_FUNC_CALL, $1, $3, 0, 0, 0, 0, 0); }
 	;
 
 printvalue: LIT_STRING rprintvalue

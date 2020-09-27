@@ -1,6 +1,6 @@
 //
 // INF01147 - Compiladores B - 2020/1
-// Trabalho Pratico, Etapa 2: Analise Sintatica e Preenchimento da Tabela de Simbolos
+// Trabalho Pratico, Etapa 3: Geracao de Arvore Sintatica Abstrata - AST
 // Nome: Pedro Caetano de Abreu Teixeira
 // Numero do cartao: 00228509
 
@@ -8,6 +8,8 @@
 #define HASH_HEADER
 
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define HASH_SIZE 997
 
@@ -24,6 +26,7 @@ typedef struct hash_node{
 	char *text;
 	struct hash_node * next;
 } HASH_NODE;
+
 
 void hashInit(void);
 int hashAddress(char *text);

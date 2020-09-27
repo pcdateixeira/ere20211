@@ -1,8 +1,10 @@
 //
 // INF01147 - Compiladores B - 2020/1
-// Trabalho Pratico, Etapa 2: Analise Sintatica e Preenchimento da Tabela de Simbolos
+// Trabalho Pratico, Etapa 3: Geracao de Arvore Sintatica Abstrata - AST
 // Nome: Pedro Caetano de Abreu Teixeira
 // Numero do cartao: 00228509
+
+#include "utils.h"
 
 int Running;
 int LineNumber;

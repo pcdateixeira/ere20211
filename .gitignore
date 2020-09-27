@@ -40,7 +40,7 @@ lex.yy.c
 *.i*86
 *.x86_64
 *.hex
-etapa2
+etapa3
 
 # Input files
 *.txt

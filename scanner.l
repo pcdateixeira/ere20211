@@ -2,13 +2,13 @@
 
 	//
 	// INF01147 - Compiladores B - 2020/1
-	// Trabalho Pratico, Etapa 2: Analise Sintatica e Preenchimento da Tabela de Simbolos
+	// Trabalho Pratico, Etapa 3: Geracao de Arvore Sintatica Abstrata - AST
 	// Nome: Pedro Caetano de Abreu Teixeira
 	// Numero do cartao: 00228509
 	
+	#include "hash.h"
 	#include "y.tab.h"
-	#include "hash.c"
-	#include "utils.c"
+	#include "utils.h"
 %}
 
 %x COMMENT
@@ -40,15 +40,15 @@
 "=="							return OPERATOR_EQ;
 "!="							return OPERATOR_DIF;
 
-"TRUE"							*Table = hashInsert(yytext, SYMBOL_LIT_TRUE); return LIT_TRUE;
-"FALSE"							*Table = hashInsert(yytext, SYMBOL_LIT_FALSE); return LIT_FALSE;
+"TRUE"							hashInsert(yytext, SYMBOL_LIT_TRUE); return LIT_TRUE;
+"FALSE"							hashInsert(yytext, SYMBOL_LIT_FALSE); return LIT_FALSE;
 
-[A-Za-z@_][A-Za-z@_0-9]*		*Table = hashInsert(yytext, SYMBOL_IDENTIFIER); return TK_IDENTIFIER;
+[A-Za-z@_][A-Za-z@_0-9]*		yylval.symbol = hashInsert(yytext, SYMBOL_IDENTIFIER); return TK_IDENTIFIER;
 
-[0-9][0-9A-F]*					*Table = hashInsert(yytext, SYMBOL_LIT_INTEGER); return LIT_INTEGER;
-([0-9][0-9A-F]*)*\.[0-9A-F]+	*Table = hashInsert(yytext, SYMBOL_LIT_FLOAT); return LIT_FLOAT;
-'.'								*Table = hashInsert(yytext, SYMBOL_LIT_CHAR); return LIT_CHAR;
-["]([^"\\\n]|\\.|\\\n)*["]		*Table = hashInsert(yytext, SYMBOL_LIT_STRING); return LIT_STRING;
+[0-9][0-9A-F]*					yylval.symbol = hashInsert(yytext, SYMBOL_LIT_INTEGER); return LIT_INTEGER;
+([0-9][0-9A-F]*)*\.[0-9A-F]+	hashInsert(yytext, SYMBOL_LIT_FLOAT); return LIT_FLOAT;
+'.'								hashInsert(yytext, SYMBOL_LIT_CHAR); return LIT_CHAR;
+["]([^"\\\n]|\\.|\\\n)*["]		hashInsert(yytext, SYMBOL_LIT_STRING); return LIT_STRING;
 
 "\n"							incLineNumber();
 
@@ -64,8 +64,6 @@
 
 %%
 
-#include "y.tab.c"
-#include "main.c"
 int yywrap(){
 	stopRunning();
 	return 1;

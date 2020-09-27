@@ -1,3 +1,15 @@
+%{
+	#include "hash.h"
+	#include "utils.h"
+	int yyerror();
+	int yylex();
+%}
+
+%union
+{
+	HASH_NODE *symbol;
+}
+
 
 %token KW_CHAR
 %token KW_INT
@@ -22,7 +34,7 @@
 %token OPERATOR_DIF
 %token TK_IDENTIFIER
 
-%token LIT_INTEGER
+%token<symbol> LIT_INTEGER
 %token LIT_FLOAT
 %token LIT_TRUE
 %token LIT_FALSE
@@ -57,7 +69,7 @@ type: KW_INT
 	| KW_LONG
 	;
 
-initvalue: LIT_INTEGER
+initvalue: LIT_INTEGER { fprintf(stderr, "Recebi %s\n", $1->text); }
 	| LIT_FLOAT
 	| LIT_CHAR
 	| LIT_TRUE

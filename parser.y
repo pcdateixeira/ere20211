@@ -1,4 +1,11 @@
 
+/*
+	INF01147 - Compiladores B - 2020/1
+	Trabalho Pratico, Etapa 2: Analise Sintatica e Preenchimento da Tabela de Simbolos
+	Nome: Pedro Caetano de Abreu Teixeira
+	Numero do cartao: 00228509
+*/
+
 %token KW_CHAR
 %token KW_INT
 %token KW_FLOAT

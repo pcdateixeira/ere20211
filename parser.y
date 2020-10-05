@@ -3,18 +3,15 @@
 %token KW_INT
 %token KW_FLOAT
 %token KW_BOOL
-%token KW_BYTE
-%token KW_LONG
 
 %token KW_IF
 %token KW_THEN
 %token KW_ELSE
 %token KW_WHILE
-%token KW_FOR
+%token KW_LOOP
 %token KW_READ
 %token KW_PRINT
 %token KW_RETURN
-%token KW_BREAK
 
 %token OPERATOR_LE
 %token OPERATOR_GE
@@ -31,7 +28,7 @@
 
 %token TOKEN_ERROR
 
-%left '|' '&' '.' 'v' '~'
+%left '|' '^' '~'
 %left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
 %left '+' '-'
 %left '*' '/'
@@ -42,19 +39,18 @@ programa: ldec
 	;
 	
 ldec: globalvar ';' ldec
-	| function ldec
+	| function ';' ldec
 	|
 	;
 
-globalvar: type TK_IDENTIFIER '=' initvalue
-	| type TK_IDENTIFIER '[' LIT_INTEGER ']' initvecvalue
+globalvar: TK_IDENTIFIER '=' type ':' initvalue
+	| TK_IDENTIFIER '=' type '[' LIT_INTEGER ']' initvecvalue
 	;
 
-type: KW_INT
+type: KW_CHAR
+	| KW_INT
 	| KW_FLOAT
 	| KW_BOOL
-	| KW_BYTE
-	| KW_LONG
 	;
 
 initvalue: LIT_INTEGER
@@ -72,21 +68,21 @@ rvecvalue: initvalue rvecvalue
 	|
 	;
 
-function: type TK_IDENTIFIER '(' funcparam ')' body
+function: TK_IDENTIFIER '(' funcparam ')' '=' type body
 	;
 
-funcparam: type TK_IDENTIFIER rfuncparam
+funcparam: TK_IDENTIFIER '=' type rfuncparam
 	|
 	;
 
-rfuncparam: ',' type TK_IDENTIFIER rfuncparam
+rfuncparam: ',' TK_IDENTIFIER '=' type rfuncparam
 	|
 	;
 
 body: '{' lcmd '}'
 	;
 
-lcmd: cmd ';' lcmd
+lcmd: cmd lcmd
 	|
 	;
 
@@ -95,8 +91,7 @@ cmd: TK_IDENTIFIER '=' expr
 	| KW_IF '(' expr ')' KW_THEN cmd
 	| KW_IF '(' expr ')' KW_THEN cmd KW_ELSE cmd
 	| KW_WHILE '(' expr ')' cmd
-	| KW_FOR '(' TK_IDENTIFIER ':' expr ',' expr ',' expr ')' cmd
-	| KW_BREAK
+	| KW_LOOP '(' TK_IDENTIFIER ':' expr ',' expr ',' expr ')' cmd
 	| KW_READ TK_IDENTIFIER
 	| KW_RETURN expr
 	| KW_PRINT printvalue
@@ -114,9 +109,7 @@ expr: TK_IDENTIFIER
 	| expr '<' expr
 	| expr '>' expr
 	| expr '|' expr
-	| expr '&' expr
-	| expr '.' expr
-	| expr 'v' expr
+	| expr '^' expr
 	| expr '~' expr
 	| expr OPERATOR_LE expr
 	| expr OPERATOR_GE expr

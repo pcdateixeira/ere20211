@@ -38,4 +38,6 @@ int main(int argc, char ** argv){
 	
 	printf("Tabela de símbolos:\n");
 	hashPrint();
+	
+	exit(0);
 }

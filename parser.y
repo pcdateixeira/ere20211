@@ -49,8 +49,12 @@
 
 %token TOKEN_ERROR
 
+%type<ast> ldec
+%type<ast> globalvar
 %type<ast> type
 %type<ast> initvalue
+%type<ast> initvecvalue
+%type<ast> rvecvalue
 %type<ast> function
 %type<ast> funcparam
 %type<ast> rfuncparam
@@ -70,16 +74,17 @@
 
 %%
 
-programa: ldec
+programa: ldec { astPrint($1, 0); }
 	;
 	
-ldec: globalvar ';' ldec
-	| function ';' ldec { astPrint($1, 0); }
-	|
+ldec: globalvar ';' ldec { $$ = astCreate(AST_LDECL, 0, $1, $3, 0, 0, 0, 0); }
+	| function ';' ldec { $$ = astCreate(AST_LDECL, 0, $1, $3, 0, 0, 0, 0); }
+	| { $$ = 0; }
 	;
 
-globalvar: TK_IDENTIFIER '=' type ':' initvalue
-	| TK_IDENTIFIER '=' type '[' LIT_INTEGER ']' initvecvalue
+globalvar: TK_IDENTIFIER '=' type ':' initvalue					{ $$ = astCreate(AST_DECL, $1, $3, $5, 0, 0, 0, 0); }
+	| TK_IDENTIFIER '=' type '[' LIT_INTEGER ']' initvecvalue	{ $$ = astCreate(AST_VEC_DECL, $1, $3,
+																 astCreate(AST_SYMBOL, $5, 0, 0, 0, 0, 0, 0), $7, 0, 0, 0); }
 	;
 
 type: KW_CHAR	{ $$ = astCreate(AST_TYPE_CHAR, 0, 0, 0, 0, 0, 0, 0); }
@@ -95,12 +100,12 @@ initvalue: LIT_INTEGER 	{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
 	| LIT_FALSE 		{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
 	;
 
-initvecvalue: ':' initvalue rvecvalue
-	|
+initvecvalue: ':' initvalue rvecvalue	{ $$ = astCreate(AST_LINITVAL, 0, $2, $3, 0, 0, 0, 0); }
+	|									{ $$ = 0; }
 	;
 
-rvecvalue: initvalue rvecvalue
-	|
+rvecvalue: initvalue rvecvalue	{ $$ = astCreate(AST_LINITVAL, 0, $1, $2, 0, 0, 0, 0); }
+	|							{ $$ = 0; }
 	;
 
 function: TK_IDENTIFIER '(' funcparam ')' '=' type body { $$ = astCreate(AST_FUNCTION, $1, $3, $6, $7, 0, 0, 0); }

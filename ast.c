@@ -37,12 +37,16 @@ void astPrint(AST* node, int level){
 	
 	switch(node->type){
 		
+		case AST_LDECL: fprintf(stderr, "AST_LDECL"); break;
+		case AST_DECL: fprintf(stderr, "AST_DECL"); break;
+		case AST_VEC_DECL: fprintf(stderr, "AST_VEC_DECL"); break;
+		case AST_SYMBOL: fprintf(stderr, "AST_SYMBOL"); break;
+		case AST_VEC_SYMBOL: fprintf(stderr, "AST_VEC_SYMBOL"); break;
 		case AST_TYPE_CHAR: fprintf(stderr, "AST_TYPE_CHAR"); break;
 		case AST_TYPE_INT: fprintf(stderr, "AST_TYPE_INT"); break;
 		case AST_TYPE_FLOAT: fprintf(stderr, "AST_TYPE_FLOAT"); break;
 		case AST_TYPE_BOOL: fprintf(stderr, "AST_TYPE_BOOL"); break;
-		case AST_SYMBOL: fprintf(stderr, "AST_SYMBOL"); break;
-		case AST_VEC_SYMBOL: fprintf(stderr, "AST_VEC_SYMBOL"); break;
+		case AST_LINITVAL: fprintf(stderr, "AST_LINITVAL"); break;
 		case AST_FUNCTION: fprintf(stderr, "AST_FUNCTION"); break;
 		case AST_LFUNCPARAM: fprintf(stderr, "AST_LFUNCPARAM"); break;
 		case AST_BLOCK: fprintf(stderr, "AST_BLOCK"); break;

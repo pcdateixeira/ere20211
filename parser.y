@@ -52,6 +52,7 @@
 %type<ast> initvalue
 %type<ast> expr
 %type<ast> funcarg
+%type<ast> rfuncarg
 
 %left '|' '^' '~'
 %left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
@@ -112,7 +113,7 @@ lcmd: cmd lcmd
 	;
 
 cmd: TK_IDENTIFIER '=' expr { astPrint($3, 0); }
-	| TK_IDENTIFIER '[' expr ']' '=' expr
+	| TK_IDENTIFIER '[' expr ']' '=' expr { astPrint($3, 0); astPrint($6, 0);}
 	| KW_IF '(' expr ')' KW_THEN cmd
 	| KW_IF '(' expr ')' KW_THEN cmd KW_ELSE cmd
 	| KW_WHILE '(' expr ')' cmd
@@ -127,19 +128,19 @@ cmd: TK_IDENTIFIER '=' expr { astPrint($3, 0); }
 expr: TK_IDENTIFIER { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
 	| TK_IDENTIFIER '[' expr ']' { $$ = astCreate(AST_VEC_SYMBOL, $1, $3, 0, 0, 0, 0, 0); }
 	| initvalue
-	| expr '+' expr { $$ = astCreate(AST_ADD, 0, $1, $3, 0, 0, 0, 0); }
-	| expr '-' expr { $$ = astCreate(AST_SUB, 0, $1, $3, 0, 0, 0, 0); }
-	| expr '*' expr
-	| expr '/' expr
-	| expr '<' expr
-	| expr '>' expr
-	| expr '|' expr
-	| expr '^' expr
-	| expr '~' expr
-	| expr OPERATOR_LE expr
-	| expr OPERATOR_GE expr
-	| expr OPERATOR_EQ expr
-	| expr OPERATOR_DIF expr
+	| expr '+' expr { $$ = astCreate(AST_OP_ADD, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '-' expr { $$ = astCreate(AST_OP_SUB, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '*' expr { $$ = astCreate(AST_OP_MULT, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '/' expr { $$ = astCreate(AST_OP_DIV, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '<' expr { $$ = astCreate(AST_OP_LESS, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '>' expr { $$ = astCreate(AST_OP_GREAT, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '|' expr { $$ = astCreate(AST_OP_OR, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '^' expr { $$ = astCreate(AST_OP_AND, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '~' expr { $$ = astCreate(AST_OP_NOT, 0, $1, $3, 0, 0, 0, 0); }
+	| expr OPERATOR_LE expr { $$ = astCreate(AST_OP_LE, 0, $1, $3, 0, 0, 0, 0); }
+	| expr OPERATOR_GE expr { $$ = astCreate(AST_OP_GE, 0, $1, $3, 0, 0, 0, 0); }
+	| expr OPERATOR_EQ expr { $$ = astCreate(AST_OP_EQ, 0, $1, $3, 0, 0, 0, 0); }
+	| expr OPERATOR_DIF expr { $$ = astCreate(AST_OP_DIF, 0, $1, $3, 0, 0, 0, 0); }
 	| '(' expr ')' { $$ = $2; }
 	| TK_IDENTIFIER '(' funcarg ')' { $$ = astCreate(AST_FUNC_CALL, $1, $3, 0, 0, 0, 0, 0); }
 	;
@@ -152,12 +153,12 @@ rprintvalue: ',' printvalue
 	|
 	;
 
-funcarg: expr rfuncarg
-	|
+funcarg: expr rfuncarg { $$ = astCreate(AST_LFUNCARG, 0, $1, $2, 0, 0, 0, 0); }
+	| { $$ = 0; }
 	;
 
-rfuncarg: ',' expr rfuncarg
-	|
+rfuncarg: ',' expr rfuncarg { $$ = astCreate(AST_LFUNCARG, 0, $2, $3, 0, 0, 0, 0); }
+	| { $$ = 0; }
 	;
 
 %%

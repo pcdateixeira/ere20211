@@ -11,6 +11,7 @@
 int yylex();
 extern char *yytext;
 extern FILE *yyin;
+extern int yyparse(void);
 
 
 int isRunning(void);

@@ -13,9 +13,21 @@
 
 #define AST_SYMBOL 1
 #define AST_VEC_SYMBOL 2
-#define AST_ADD 3
-#define AST_SUB 4
-#define AST_FUNC_CALL 5
+#define AST_OP_ADD 3
+#define AST_OP_SUB 4
+#define AST_OP_MULT 5
+#define AST_OP_DIV 6
+#define AST_OP_LESS 7
+#define AST_OP_GREAT 8
+#define AST_OP_OR 9
+#define AST_OP_AND 10
+#define AST_OP_NOT 11
+#define AST_OP_LE 12
+#define AST_OP_GE 13
+#define AST_OP_EQ 14
+#define AST_OP_DIF 15
+#define AST_FUNC_CALL 16
+#define AST_LFUNCARG 17
 
 typedef struct astnode
 {

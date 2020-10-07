@@ -45,12 +45,17 @@
 %token<symbol> LIT_TRUE
 %token<symbol> LIT_FALSE
 %token<symbol> LIT_CHAR
-%token LIT_STRING
+%token<symbol> LIT_STRING
 
 %token TOKEN_ERROR
 
 %type<ast> initvalue
+%type<ast> body
+%type<ast> lcmd
+%type<ast> cmd
 %type<ast> expr
+%type<ast> printvalue
+%type<ast> rprintvalue
 %type<ast> funcarg
 %type<ast> rfuncarg
 
@@ -79,11 +84,11 @@ type: KW_CHAR
 	| KW_BOOL
 	;
 
-initvalue: LIT_INTEGER { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
-	| LIT_FLOAT { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
-	| LIT_CHAR { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
-	| LIT_TRUE { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
-	| LIT_FALSE { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
+initvalue: LIT_INTEGER 	{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
+	| LIT_FLOAT 		{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
+	| LIT_CHAR 			{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
+	| LIT_TRUE 			{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
+	| LIT_FALSE 		{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
 	;
 
 initvecvalue: ':' initvalue rvecvalue
@@ -105,60 +110,60 @@ rfuncparam: ',' TK_IDENTIFIER '=' type rfuncparam
 	|
 	;
 
-body: '{' lcmd '}'
+body: '{' lcmd '}' { $$ = $2; astPrint($2, 0); }
 	;
 
-lcmd: cmd lcmd
-	|
+lcmd: cmd lcmd 	{ $$ = astCreate(AST_LCMD, 0, $1, $2, 0, 0, 0, 0); }
+	|			{ $$ = 0; }
 	;
 
-cmd: TK_IDENTIFIER '=' expr { astPrint($3, 0); }
-	| TK_IDENTIFIER '[' expr ']' '=' expr { astPrint($3, 0); astPrint($6, 0);}
-	| KW_IF '(' expr ')' KW_THEN cmd
-	| KW_IF '(' expr ')' KW_THEN cmd KW_ELSE cmd
-	| KW_WHILE '(' expr ')' cmd
-	| KW_LOOP '(' TK_IDENTIFIER ':' expr ',' expr ',' expr ')' cmd
-	| KW_READ TK_IDENTIFIER
-	| KW_RETURN expr
-	| KW_PRINT printvalue
-	| body
-	|
+cmd: TK_IDENTIFIER '=' expr 										{ $$ = astCreate(AST_ATTR, $1, $3, 0, 0, 0, 0, 0); }
+	| TK_IDENTIFIER '[' expr ']' '=' expr							{ $$ = astCreate(AST_VEC_ATTR, $1, $3, $6, 0, 0, 0, 0); }
+	| KW_IF '(' expr ')' KW_THEN cmd 								{ $$ = astCreate(AST_IF, 0, $3, $6, 0, 0, 0, 0); }
+	| KW_IF '(' expr ')' KW_THEN cmd KW_ELSE cmd 					{ $$ = astCreate(AST_IFELSE, 0, $3, $6, $8, 0, 0, 0); }
+	| KW_WHILE '(' expr ')' cmd 									{ $$ = astCreate(AST_WHILE, 0, $3, $5, 0, 0, 0, 0); }
+	| KW_LOOP '(' TK_IDENTIFIER ':' expr ',' expr ',' expr ')' cmd	{ $$ = astCreate(AST_LOOP, $3, $5, $7, $9, $11, 0, 0); }
+	| KW_READ TK_IDENTIFIER 										{ $$ = astCreate(AST_READ, $2, 0, 0, 0, 0, 0, 0); }
+	| KW_PRINT printvalue											{ $$ = astCreate(AST_PRINT, 0, $2, 0, 0, 0, 0, 0); }
+	| KW_RETURN expr 												{ $$ = astCreate(AST_RETURN, 0, $2, 0, 0, 0, 0, 0); }
+	| body															{ $$ = $1; }
+	|																{ $$ = 0; }
 	;
 
-expr: TK_IDENTIFIER { $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
-	| TK_IDENTIFIER '[' expr ']' { $$ = astCreate(AST_VEC_SYMBOL, $1, $3, 0, 0, 0, 0, 0); }
+expr: TK_IDENTIFIER 				{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
+	| TK_IDENTIFIER '[' expr ']' 	{ $$ = astCreate(AST_VEC_SYMBOL, $1, $3, 0, 0, 0, 0, 0); }
 	| initvalue
-	| expr '+' expr { $$ = astCreate(AST_OP_ADD, 0, $1, $3, 0, 0, 0, 0); }
-	| expr '-' expr { $$ = astCreate(AST_OP_SUB, 0, $1, $3, 0, 0, 0, 0); }
-	| expr '*' expr { $$ = astCreate(AST_OP_MULT, 0, $1, $3, 0, 0, 0, 0); }
-	| expr '/' expr { $$ = astCreate(AST_OP_DIV, 0, $1, $3, 0, 0, 0, 0); }
-	| expr '<' expr { $$ = astCreate(AST_OP_LESS, 0, $1, $3, 0, 0, 0, 0); }
-	| expr '>' expr { $$ = astCreate(AST_OP_GREAT, 0, $1, $3, 0, 0, 0, 0); }
-	| expr '|' expr { $$ = astCreate(AST_OP_OR, 0, $1, $3, 0, 0, 0, 0); }
-	| expr '^' expr { $$ = astCreate(AST_OP_AND, 0, $1, $3, 0, 0, 0, 0); }
-	| expr '~' expr { $$ = astCreate(AST_OP_NOT, 0, $1, $3, 0, 0, 0, 0); }
-	| expr OPERATOR_LE expr { $$ = astCreate(AST_OP_LE, 0, $1, $3, 0, 0, 0, 0); }
-	| expr OPERATOR_GE expr { $$ = astCreate(AST_OP_GE, 0, $1, $3, 0, 0, 0, 0); }
-	| expr OPERATOR_EQ expr { $$ = astCreate(AST_OP_EQ, 0, $1, $3, 0, 0, 0, 0); }
-	| expr OPERATOR_DIF expr { $$ = astCreate(AST_OP_DIF, 0, $1, $3, 0, 0, 0, 0); }
-	| '(' expr ')' { $$ = $2; }
+	| expr '+' expr 				{ $$ = astCreate(AST_OP_ADD, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '-' expr 				{ $$ = astCreate(AST_OP_SUB, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '*' expr 				{ $$ = astCreate(AST_OP_MULT, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '/' expr 				{ $$ = astCreate(AST_OP_DIV, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '<' expr 				{ $$ = astCreate(AST_OP_LESS, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '>' expr 				{ $$ = astCreate(AST_OP_GREAT, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '|' expr 				{ $$ = astCreate(AST_OP_OR, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '^' expr					{ $$ = astCreate(AST_OP_AND, 0, $1, $3, 0, 0, 0, 0); }
+	| expr '~' expr 				{ $$ = astCreate(AST_OP_NOT, 0, $1, $3, 0, 0, 0, 0); }
+	| expr OPERATOR_LE expr 		{ $$ = astCreate(AST_OP_LE, 0, $1, $3, 0, 0, 0, 0); }
+	| expr OPERATOR_GE expr 		{ $$ = astCreate(AST_OP_GE, 0, $1, $3, 0, 0, 0, 0); }
+	| expr OPERATOR_EQ expr 		{ $$ = astCreate(AST_OP_EQ, 0, $1, $3, 0, 0, 0, 0); }
+	| expr OPERATOR_DIF expr 		{ $$ = astCreate(AST_OP_DIF, 0, $1, $3, 0, 0, 0, 0); }
+	| '(' expr ')' 					{ $$ = $2; }
 	| TK_IDENTIFIER '(' funcarg ')' { $$ = astCreate(AST_FUNC_CALL, $1, $3, 0, 0, 0, 0, 0); }
 	;
 
-printvalue: LIT_STRING rprintvalue
-	| expr rprintvalue
+printvalue: LIT_STRING rprintvalue	{ $$ = astCreate(AST_LPRINT, $1, 0, $2, 0, 0, 0, 0); }
+	| expr rprintvalue				{ $$ = astCreate(AST_LPRINT, 0, $1, $2, 0, 0, 0, 0); }
 	;
 
-rprintvalue: ',' printvalue
-	|
+rprintvalue: ',' printvalue			{ $$ = $2; }
+	|								{ $$ = 0; }
 	;
 
-funcarg: expr rfuncarg { $$ = astCreate(AST_LFUNCARG, 0, $1, $2, 0, 0, 0, 0); }
-	| { $$ = 0; }
+funcarg: expr rfuncarg 	{ $$ = astCreate(AST_LFUNCARG, 0, $1, $2, 0, 0, 0, 0); }
+	| 					{ $$ = 0; }
 	;
 
 rfuncarg: ',' expr rfuncarg { $$ = astCreate(AST_LFUNCARG, 0, $2, $3, 0, 0, 0, 0); }
-	| { $$ = 0; }
+	| 						{ $$ = 0; }
 	;
 
 %%

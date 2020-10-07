@@ -4,11 +4,6 @@
 # Nome: Pedro Caetano de Abreu Teixeira
 # Numero do cartao: 00228509
 #
-# Makefile for single compiler call
-# All source files must be included from code embedded in scanner.l
-# In our case, you probably need #include "hash.c" at the beginning
-# and #include "main.c" in the last part of the scanner.l
-#
 
 etapa3: main.o y.tab.o lex.yy.o hash.o ast.o utils.o
 	gcc main.o y.tab.o lex.yy.o hash.o ast.o utils.o -o etapa3

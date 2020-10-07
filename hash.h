@@ -27,7 +27,6 @@ typedef struct hash_node{
 	struct hash_node * next;
 } HASH_NODE;
 
-
 void hashInit(void);
 int hashAddress(char *text);
 HASH_NODE *hashFind(char *text);

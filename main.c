@@ -8,11 +8,9 @@
 #include <stdlib.h>
 #include "hash.h"
 
-//lex.yy.h
 int yylex();
 extern char *yytext;
 extern FILE *yyin;
-int yyparse();
 
 
 int isRunning(void);
@@ -20,7 +18,7 @@ void initMe(void);
 
 int main(int argc, char ** argv){
 	if (argc < 2){
-		fprintf(stderr, "Argumentos insuficientes.\nChamada de execução: etapa2 nomeDoArquivo\n");
+		fprintf(stderr, "Argumentos insuficientes.\nChamada de execução: etapa1 nomeDoArquivo\n");
 		exit(1);
 	}
 	yyin = fopen(argv[1],"r");

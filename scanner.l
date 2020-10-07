@@ -21,18 +21,15 @@
 "int" 							return KW_INT;
 "float" 						return KW_FLOAT;
 "bool" 							return KW_BOOL;
-"byte"							return KW_BYTE;
-"long"							return KW_LONG;
 
 "if" 							return KW_IF;
 "then" 							return KW_THEN;
 "else" 							return KW_ELSE;
 "while" 						return KW_WHILE;
-"for" 							return KW_FOR;
+"loop" 							return KW_LOOP;
 "read" 							return KW_READ;
 "print" 						return KW_PRINT;
 "return" 						return KW_RETURN;
-"break"							return KW_BREAK;
 
 [,;:()\[\]{}+\-*/<>=|\^~&$#]	return yytext[0];
 

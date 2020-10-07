@@ -49,7 +49,11 @@
 
 %token TOKEN_ERROR
 
+%type<ast> type
 %type<ast> initvalue
+%type<ast> function
+%type<ast> funcparam
+%type<ast> rfuncparam
 %type<ast> body
 %type<ast> lcmd
 %type<ast> cmd
@@ -70,7 +74,7 @@ programa: ldec
 	;
 	
 ldec: globalvar ';' ldec
-	| function ';' ldec
+	| function ';' ldec { astPrint($1, 0); }
 	|
 	;
 
@@ -78,10 +82,10 @@ globalvar: TK_IDENTIFIER '=' type ':' initvalue
 	| TK_IDENTIFIER '=' type '[' LIT_INTEGER ']' initvecvalue
 	;
 
-type: KW_CHAR
-	| KW_INT
-	| KW_FLOAT
-	| KW_BOOL
+type: KW_CHAR	{ $$ = astCreate(AST_TYPE_CHAR, 0, 0, 0, 0, 0, 0, 0); }
+	| KW_INT	{ $$ = astCreate(AST_TYPE_INT, 0, 0, 0, 0, 0, 0, 0); }
+	| KW_FLOAT	{ $$ = astCreate(AST_TYPE_FLOAT, 0, 0, 0, 0, 0, 0, 0); }
+	| KW_BOOL	{ $$ = astCreate(AST_TYPE_BOOL, 0, 0, 0, 0, 0, 0, 0); }
 	;
 
 initvalue: LIT_INTEGER 	{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
@@ -99,18 +103,18 @@ rvecvalue: initvalue rvecvalue
 	|
 	;
 
-function: TK_IDENTIFIER '(' funcparam ')' '=' type body
+function: TK_IDENTIFIER '(' funcparam ')' '=' type body { $$ = astCreate(AST_FUNCTION, $1, $3, $6, $7, 0, 0, 0); }
 	;
 
-funcparam: TK_IDENTIFIER '=' type rfuncparam
-	|
+funcparam: TK_IDENTIFIER '=' type rfuncparam	{ $$ = astCreate(AST_LFUNCPARAM, $1, $3, $4, 0, 0, 0, 0); }
+	|											{ $$ = 0; }
 	;
 
-rfuncparam: ',' TK_IDENTIFIER '=' type rfuncparam
-	|
+rfuncparam: ',' TK_IDENTIFIER '=' type rfuncparam	{ $$ = astCreate(AST_LFUNCPARAM, $2, $4, $5, 0, 0, 0, 0); }
+	|												{ $$ = 0; }
 	;
 
-body: '{' lcmd '}' { $$ = $2; astPrint($2, 0); }
+body: '{' lcmd '}' { $$ = astCreate(AST_BLOCK, 0, $2, 0, 0, 0, 0, 0); }
 	;
 
 lcmd: cmd lcmd 	{ $$ = astCreate(AST_LCMD, 0, $1, $2, 0, 0, 0, 0); }
@@ -132,7 +136,7 @@ cmd: TK_IDENTIFIER '=' expr 										{ $$ = astCreate(AST_ATTR, $1, $3, 0, 0, 0
 
 expr: TK_IDENTIFIER 				{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
 	| TK_IDENTIFIER '[' expr ']' 	{ $$ = astCreate(AST_VEC_SYMBOL, $1, $3, 0, 0, 0, 0, 0); }
-	| initvalue
+	| initvalue						{ $$ = $1; }
 	| expr '+' expr 				{ $$ = astCreate(AST_OP_ADD, 0, $1, $3, 0, 0, 0, 0); }
 	| expr '-' expr 				{ $$ = astCreate(AST_OP_SUB, 0, $1, $3, 0, 0, 0, 0); }
 	| expr '*' expr 				{ $$ = astCreate(AST_OP_MULT, 0, $1, $3, 0, 0, 0, 0); }
@@ -146,7 +150,7 @@ expr: TK_IDENTIFIER 				{ $$ = astCreate(AST_SYMBOL, $1, 0, 0, 0, 0, 0, 0); }
 	| expr OPERATOR_GE expr 		{ $$ = astCreate(AST_OP_GE, 0, $1, $3, 0, 0, 0, 0); }
 	| expr OPERATOR_EQ expr 		{ $$ = astCreate(AST_OP_EQ, 0, $1, $3, 0, 0, 0, 0); }
 	| expr OPERATOR_DIF expr 		{ $$ = astCreate(AST_OP_DIF, 0, $1, $3, 0, 0, 0, 0); }
-	| '(' expr ')' 					{ $$ = $2; }
+	| '(' expr ')' 					{ $$ = astCreate(AST_PAREN, 0, $2, 0, 0, 0, 0, 0); }
 	| TK_IDENTIFIER '(' funcarg ')' { $$ = astCreate(AST_FUNC_CALL, $1, $3, 0, 0, 0, 0, 0); }
 	;
 

@@ -36,8 +36,16 @@ void astPrint(AST* node, int level){
 	fprintf(stderr, "ast(");
 	
 	switch(node->type){
+		
+		case AST_TYPE_CHAR: fprintf(stderr, "AST_TYPE_CHAR"); break;
+		case AST_TYPE_INT: fprintf(stderr, "AST_TYPE_INT"); break;
+		case AST_TYPE_FLOAT: fprintf(stderr, "AST_TYPE_FLOAT"); break;
+		case AST_TYPE_BOOL: fprintf(stderr, "AST_TYPE_BOOL"); break;
 		case AST_SYMBOL: fprintf(stderr, "AST_SYMBOL"); break;
 		case AST_VEC_SYMBOL: fprintf(stderr, "AST_VEC_SYMBOL"); break;
+		case AST_FUNCTION: fprintf(stderr, "AST_FUNCTION"); break;
+		case AST_LFUNCPARAM: fprintf(stderr, "AST_LFUNCPARAM"); break;
+		case AST_BLOCK: fprintf(stderr, "AST_BLOCK"); break;
 		case AST_LCMD: fprintf(stderr, "AST_LCMD"); break;
 		case AST_ATTR: fprintf(stderr, "AST_ATTR"); break;
 		case AST_VEC_ATTR: fprintf(stderr, "AST_VEC_ATTR"); break;
@@ -61,6 +69,7 @@ void astPrint(AST* node, int level){
 		case AST_OP_GE: fprintf(stderr, "AST_OP_GE"); break;
 		case AST_OP_EQ: fprintf(stderr, "AST_OP_EQ"); break;
 		case AST_OP_DIF: fprintf(stderr, "AST_OP_DIF"); break;
+		case AST_PAREN: fprintf(stderr, "AST_PAREN"); break;
 		case AST_FUNC_CALL: fprintf(stderr, "AST_FUNC_CALL"); break;
 		case AST_LPRINT: fprintf(stderr, "AST_LPRINT"); break;
 		case AST_LFUNCARG: fprintf(stderr, "AST_LFUNCARG"); break;

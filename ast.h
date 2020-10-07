@@ -9,7 +9,7 @@
 
 #include "hash.h"
 
-#define MAX_CHILD_NODES 6
+#define MAX_CHILD_NODES 4
 
 #define AST_LDECL 1
 #define AST_DECL 2
@@ -43,7 +43,7 @@
 #define AST_OP_OR 30
 #define AST_OP_AND 31
 #define AST_OP_NOT 32
-#define AST_OP_LE 32
+#define AST_OP_LE 33
 #define AST_OP_GE 34
 #define AST_OP_EQ 35
 #define AST_OP_DIF 36
@@ -59,7 +59,7 @@ typedef struct astnode
 	struct astnode *child[MAX_CHILD_NODES];
 } AST;
 
-AST *astCreate(int type, HASH_NODE* symbol, AST* c0, AST* c1, AST* c2, AST* c3, AST* c4, AST* c5);
+AST *astCreate(int type, HASH_NODE* symbol, AST* c0, AST* c1, AST* c2, AST* c3);
 
 void astPrint(AST* node, int level);
 

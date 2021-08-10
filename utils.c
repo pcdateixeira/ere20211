@@ -1,8 +1,10 @@
 //
-// INF01147 - Compiladores B - 2020/1
+// INF01147 - Compiladores B - 2021/1
 // Trabalho Pratico, Etapa 1: Analise Lexica e Inicializacao da Tabela de Simbolos
 // Nome: Pedro Caetano de Abreu Teixeira
 // Numero do cartao: 00228509
+
+#include "utils.h"
 
 int Running;
 int LineNumber;

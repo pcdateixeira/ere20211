@@ -1,6 +1,5 @@
-
 /*
-	INF01147 - Compiladores B - 2020/1
+	INF01147 - Compiladores B - 2021/1
 	Trabalho Pratico, Etapa 2: Analise Sintatica e Preenchimento da Tabela de Simbolos
 	Nome: Pedro Caetano de Abreu Teixeira
 	Numero do cartao: 00228509
@@ -9,13 +8,12 @@
 %token KW_CHAR
 %token KW_INT
 %token KW_FLOAT
-%token KW_BOOL
+%token KW_DATA
 
 %token KW_IF
-%token KW_THEN
 %token KW_ELSE
-%token KW_WHILE
-%token KW_LOOP
+%token KW_UNTIL
+%token KW_COMEFROM
 %token KW_READ
 %token KW_PRINT
 %token KW_RETURN
@@ -24,50 +22,40 @@
 %token OPERATOR_GE
 %token OPERATOR_EQ
 %token OPERATOR_DIF
+%token OPERATOR_RANGE
+
 %token TK_IDENTIFIER
 
 %token LIT_INTEGER
-%token LIT_FLOAT
-%token LIT_TRUE
-%token LIT_FALSE
 %token LIT_CHAR
 %token LIT_STRING
-
 %token TOKEN_ERROR
 
-%left '|' '^' '~'
-%left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
+%left '|' '&' '~'
+%left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF OPERATOR_RANGE
 %left '+' '-'
 %left '*' '/'
 
 %%
 
-programa: ldec
+programa: datasection lfunction
 	;
-	
-ldec: globalvar ';' ldec
-	| function ';' ldec
+
+datasection: KW_DATA '{' lglobalvar '}'
+	;
+
+lglobalvar: globalvar ';' rglobalvar
+	;
+
+rglobalvar: globalvar ';' rglobalvar
 	|
 	;
 
-globalvar: TK_IDENTIFIER '=' type ':' initvalue
-	| TK_IDENTIFIER '=' type '[' LIT_INTEGER ']' initvecvalue
+globalvar: type ':' TK_IDENTIFIER '=' initvalue
+	| type '[' LIT_INTEGER OPERATOR_RANGE LIT_INTEGER ']' ':' TK_IDENTIFIER lvecvalue
 	;
 
-type: KW_CHAR
-	| KW_INT
-	| KW_FLOAT
-	| KW_BOOL
-	;
-
-initvalue: LIT_INTEGER
-	| LIT_FLOAT
-	| LIT_CHAR
-	| LIT_TRUE
-	| LIT_FALSE
-	;
-
-initvecvalue: ':' initvalue rvecvalue
+lvecvalue: '=' initvalue rvecvalue
 	|
 	;
 
@@ -75,34 +63,58 @@ rvecvalue: initvalue rvecvalue
 	|
 	;
 
-function: TK_IDENTIFIER '(' funcparam ')' '=' type body
+type: KW_CHAR
+	| KW_INT
+	| KW_FLOAT
 	;
 
-funcparam: TK_IDENTIFIER '=' type rfuncparam
+initvalue: LIT_INTEGER
+	| LIT_CHAR
+	;
+
+lfunction: function rfunction
+	;
+
+rfunction: function rfunction
 	|
 	;
 
-rfuncparam: ',' TK_IDENTIFIER '=' type rfuncparam
+function: type ':' TK_IDENTIFIER '(' lfuncparam ')' body
+	;
+
+lfuncparam: type ':' TK_IDENTIFIER rfuncparam
+	|
+	;
+
+rfuncparam: ',' type ':' TK_IDENTIFIER rfuncparam
 	|
 	;
 
 body: '{' lcmd '}'
 	;
 
-lcmd: cmd lcmd
+lcmd: cmd ';' lcmd
 	|
 	;
 
 cmd: TK_IDENTIFIER '=' expr
 	| TK_IDENTIFIER '[' expr ']' '=' expr
-	| KW_IF '(' expr ')' KW_THEN cmd
-	| KW_IF '(' expr ')' KW_THEN cmd KW_ELSE cmd
-	| KW_WHILE '(' expr ')' cmd
-	| KW_LOOP '(' TK_IDENTIFIER ':' expr ',' expr ',' expr ')' cmd
-	| KW_READ TK_IDENTIFIER
+	| KW_IF '(' expr ')' cmd
+	| KW_IF '(' expr ')' cmd KW_ELSE cmd
+	| KW_UNTIL '(' expr ')' cmd
+	| KW_COMEFROM ':' TK_IDENTIFIER
+	| KW_PRINT lprintvalue
 	| KW_RETURN expr
-	| KW_PRINT printvalue
 	| body
+	| label
+	|
+	;
+
+lprintvalue: LIT_STRING rprintvalue
+	| expr rprintvalue
+	;
+
+rprintvalue: ',' lprintvalue
 	|
 	;
 
@@ -116,25 +128,21 @@ expr: TK_IDENTIFIER
 	| expr '<' expr
 	| expr '>' expr
 	| expr '|' expr
-	| expr '^' expr
-	| expr '~' expr
+	| expr '&' expr
+	| '~' expr
 	| expr OPERATOR_LE expr
 	| expr OPERATOR_GE expr
 	| expr OPERATOR_EQ expr
 	| expr OPERATOR_DIF expr
 	| '(' expr ')'
-	| TK_IDENTIFIER '(' funcarg ')'
+	| TK_IDENTIFIER '(' lfuncarg ')'
+	| KW_READ
 	;
 
-printvalue: LIT_STRING rprintvalue
-	| expr rprintvalue
+label: TK_IDENTIFIER
 	;
 
-rprintvalue: ',' printvalue
-	|
-	;
-
-funcarg: expr rfuncarg
+lfuncarg: expr rfuncarg
 	|
 	;
 
@@ -142,11 +150,13 @@ rfuncarg: ',' expr rfuncarg
 	|
 	;
 
+
 %%
+#include <stdio.h>
+#include <stdlib.h>
+#include "utils.h"
 
 int yyerror(){
 	fprintf(stderr, "Erro de sintaxe na linha %d.\n", getLineNumber());
 	exit(3);
 }
-
-

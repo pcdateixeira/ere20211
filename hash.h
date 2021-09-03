@@ -1,6 +1,6 @@
 //
 // INF01147 - Compiladores B - 2021/1
-// Trabalho Pratico, Etapa 1: Analise Lexica e Inicializacao da Tabela de Simbolos
+// Trabalho Pratico, Etapa 2: Análise Sintática e Preenchimento da Tabela de Símbolos
 // Nome: Pedro Caetano de Abreu Teixeira
 // Numero do cartao: 00228509
 

@@ -72,10 +72,7 @@ initvalue: LIT_INTEGER
 	| LIT_CHAR
 	;
 
-lfunction: function rfunction
-	;
-
-rfunction: function rfunction
+lfunction: function lfunction
 	|
 	;
 

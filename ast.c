@@ -28,7 +28,7 @@ void astPrint(AST* node, int level){
 	if(node == 0)
 		return;
 	
-	FILE* outputFile = fopen("o.txt", "a");
+	FILE* outputFile = fopen("o.txt", "a"); // Usa um arquivo temporario para imprimir a AST, que sera usado em decompileAST(fileName) para gerar o codigo fonte descompilado
 	if (outputFile == 0){
 		fprintf(stderr, "Erro ao abrir arquivo de saida\n");
 		exit(2);
@@ -88,7 +88,7 @@ void astPrint(AST* node, int level){
 	if(node->symbol != 0)
 		fprintf(outputFile, ", %s\n", node->symbol->text);
 	else
-		fprintf(outputFile, ", 0\n");
+		fprintf(outputFile, "\n");
 	
 	fclose(outputFile);
 	

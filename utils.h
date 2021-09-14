@@ -14,5 +14,6 @@ int getLineNumber(void);
 void incLineNumber(void);
 int isRunning(void);
 void stopRunning(void);
+void decompileAst(char *fileName);
 
 #endif

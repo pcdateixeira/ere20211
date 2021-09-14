@@ -6,6 +6,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "utils.h"
 #include "hash.h"
 #include "ast.h"
 #include "y.tab.h"
@@ -18,8 +19,8 @@ void initMe(void);
 void hashPrint(void);
 
 int main(int argc, char **argv){
-	if (argc < 2){
-		fprintf(stderr, "Argumentos insuficientes.\nChamada de execucao: etapa1 nomeDoArquivo\n");
+	if (argc < 3){
+		fprintf(stderr, "Argumentos insuficientes.\nChamada de execucao: etapa3 nomeArquivoEntrada nomeArquivoSaida\n");
 		exit(1);
 	}
 
@@ -39,5 +40,10 @@ int main(int argc, char **argv){
 	printf("\n---\n\n");
 	printf("Tabela de simbolos:\n");
 	hashPrint();
+
+	printf("\n---\n\n");
+	printf("Decompilação da árvore sintática abstrata...\n");
+	decompileAst(argv[2]);
+	
 	exit(0);
 }

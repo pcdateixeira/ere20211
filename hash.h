@@ -1,5 +1,5 @@
 //
-// INF01147 - Compiladores B - 2020/1
+// INF01147 - Compiladores B - 2021/1
 // Trabalho Pratico, Etapa 3: Geracao de Arvore Sintatica Abstrata - AST
 // Nome: Pedro Caetano de Abreu Teixeira
 // Numero do cartao: 00228509
@@ -14,14 +14,12 @@
 #define HASH_SIZE 997
 
 #define SYMBOL_LIT_INTEGER 1
-#define SYMBOL_LIT_FLOAT 2
-#define SYMBOL_LIT_CHAR 3
-#define SYMBOL_LIT_STRING 4
-#define SYMBOL_LIT_TRUE 5
-#define SYMBOL_LIT_FALSE 6
-#define SYMBOL_IDENTIFIER 7
+#define SYMBOL_LIT_CHAR 2
+#define SYMBOL_LIT_STRING 3
+#define SYMBOL_IDENTIFIER 4
 
-typedef struct hash_node{
+typedef struct hash_node
+{
 	int type;
 	char *text;
 	struct hash_node * next;

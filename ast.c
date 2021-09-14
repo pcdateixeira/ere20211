@@ -1,5 +1,5 @@
 //
-// INF01147 - Compiladores B - 2020/1
+// INF01147 - Compiladores B - 2021/1
 // Trabalho Pratico, Etapa 3: Geracao de Arvore Sintatica Abstrata - AST
 // Nome: Pedro Caetano de Abreu Teixeira
 // Numero do cartao: 00228509
@@ -39,16 +39,18 @@ void astPrint(AST* node, int level){
 	
 	switch(node->type){
 		
-		case AST_LDECL: fprintf(outputFile, "AST_LDECL"); break;
-		case AST_DECL: fprintf(outputFile, "AST_DECL"); break;
-		case AST_VEC_DECL: fprintf(outputFile, "AST_VEC_DECL"); break;
 		case AST_SYMBOL: fprintf(outputFile, "AST_SYMBOL"); break;
 		case AST_VEC_SYMBOL: fprintf(outputFile, "AST_VEC_SYMBOL"); break;
+		case AST_PROGRAM: fprintf(outputFile, "AST_PROGRAM"); break;
+		case AST_DATASEC: fprintf(outputFile, "AST_DATASEC"); break;
+		case AST_LGLOBALVAR: fprintf(outputFile, "AST_LGLOBALVAR"); break;
+		case AST_GLOBALVAR: fprintf(outputFile, "AST_GLOBALVAR"); break;
+		case AST_VEC_GLOBALVAR: fprintf(outputFile, "AST_VEC_GLOBALVAR"); break;
+		case AST_LINITVAL: fprintf(outputFile, "AST_LINITVAL"); break;
 		case AST_TYPE_CHAR: fprintf(outputFile, "AST_TYPE_CHAR"); break;
 		case AST_TYPE_INT: fprintf(outputFile, "AST_TYPE_INT"); break;
 		case AST_TYPE_FLOAT: fprintf(outputFile, "AST_TYPE_FLOAT"); break;
-		case AST_TYPE_BOOL: fprintf(outputFile, "AST_TYPE_BOOL"); break;
-		case AST_LINITVAL: fprintf(outputFile, "AST_LINITVAL"); break;
+		case AST_LFUNCTION: fprintf(outputFile, "AST_LFUNCTION"); break;
 		case AST_FUNCTION: fprintf(outputFile, "AST_FUNCTION"); break;
 		case AST_LFUNCPARAM: fprintf(outputFile, "AST_LFUNCPARAM"); break;
 		case AST_BLOCK: fprintf(outputFile, "AST_BLOCK"); break;
@@ -57,11 +59,12 @@ void astPrint(AST* node, int level){
 		case AST_VEC_ATTR: fprintf(outputFile, "AST_VEC_ATTR"); break;
 		case AST_IF: fprintf(outputFile, "AST_IF"); break;
 		case AST_IFELSE: fprintf(outputFile, "AST_IFELSE"); break;
-		case AST_WHILE: fprintf(outputFile, "AST_WHILE"); break;
-		case AST_LOOP: fprintf(outputFile, "AST_LOOP"); break;
-		case AST_READ: fprintf(outputFile, "AST_READ"); break;
+		case AST_UNTIL: fprintf(outputFile, "AST_UNTIL"); break;
+		case AST_COMEFROM: fprintf(outputFile, "AST_COMEFROM"); break;
 		case AST_PRINT: fprintf(outputFile, "AST_PRINT"); break;
 		case AST_RETURN: fprintf(outputFile, "AST_RETURN"); break;
+		case AST_LABEL: fprintf(outputFile, "AST_LABEL"); break;
+		case AST_LPRINT: fprintf(outputFile, "AST_LPRINT"); break;
 		case AST_OP_ADD: fprintf(outputFile, "AST_OP_ADD"); break;
 		case AST_OP_SUB: fprintf(outputFile, "AST_OP_SUB"); break;
 		case AST_OP_MULT: fprintf(outputFile, "AST_OP_MULT"); break;
@@ -77,7 +80,7 @@ void astPrint(AST* node, int level){
 		case AST_OP_DIF: fprintf(outputFile, "AST_OP_DIF"); break;
 		case AST_PAREN: fprintf(outputFile, "AST_PAREN"); break;
 		case AST_FUNC_CALL: fprintf(outputFile, "AST_FUNC_CALL"); break;
-		case AST_LPRINT: fprintf(outputFile, "AST_LPRINT"); break;
+		case AST_READ: fprintf(outputFile, "AST_READ"); break;
 		case AST_LFUNCARG: fprintf(outputFile, "AST_LFUNCARG"); break;
 		default: fprintf(outputFile, "AST_UNKNOWN"); break;
 	}

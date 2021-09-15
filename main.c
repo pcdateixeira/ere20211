@@ -30,6 +30,8 @@ int main(int argc, char **argv){
 		exit(2);		
 	}
 
+	remove("ast.txt"); // Remove a AST de uma execucao anterior, caso esteja no diretorio
+
 	int tok;
 	initMe();
 

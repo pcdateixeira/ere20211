@@ -196,31 +196,12 @@ void decompileAst(char *fileName){
 				fseek(astFile, filePosition, SEEK_SET);
 			}
 		}
-		if (strstr(line, "AST_BLOCK") != NULL) { // Se comecou um bloco de codigo de uma funcao
-		// Blocos de codigo internos serao tratados dentro deste if, que e somente para blocos de codigos de funcoes
-			fprintf(outputFile, "{\n"); // primeiro abre chaves
-			printf("%s comeco de bloco\n", line);
-
-			filePosition = ftell(astFile);
-
-			if (fgets(line, 256, astFile) == NULL) // Se a funcao tem uma lista vazia de comandos, e a leitura da AST chegou ao fim
-				fprintf(outputFile, "}");
-			else if (strstr(line, "AST_LCMD") == NULL){ // Se a leitura nao chegou ao fim, mas a funcao tem uma lista vazia de comandos
-				fprintf(outputFile, "}\n");
-				printf("%s final de bloco com uma linha a mais\n", line);
-				fseek(astFile, filePosition, SEEK_SET);
-			}
-			else { // Se a funcao tem ao menos um comando
-				fprintf(outputFile, "}\n");
-			}
-		}
 	}
 
 	if (dataSecFinished == 0) // Se nao ha nada apos a ultima variavel global na AST, fecha a secao de dados com um '}'
 		fprintf(outputFile, "}");
 
 	fclose(astFile);
-	//remove("ast.txt"); // Remove o arquivo temporario
 
 	fclose(outputFile);
 

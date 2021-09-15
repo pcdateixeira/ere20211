@@ -12,11 +12,6 @@
 *.map
 *.exp
 
-# lex/yacc output
-y.tab.c
-y.tab.h
-lex.yy.c
-
 # Precompiled Headers
 *.gch
 *.pch
@@ -40,17 +35,12 @@ lex.yy.c
 *.i*86
 *.x86_64
 *.hex
-etapa2
-
-# Input files
-*.txt
 
 # Debug files
 *.dSYM/
 *.su
 *.idb
 *.pdb
-y.output
 
 # Kernel Module Compile Results
 *.mod*
@@ -60,3 +50,6 @@ modules.order
 Module.symvers
 Mkfile.old
 dkms.conf
+
+# Test input files
+*.txt

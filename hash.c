@@ -1,6 +1,6 @@
 //
-// INF01147 - Compiladores B - 2020/1
-// Trabalho Pratico, Etapa 2: Analise Sintatica e Preenchimento da Tabela de Simbolos
+// INF01147 - Compiladores B - 2021/1
+// Trabalho Pratico, Etapa 3: Geracao de Arvore Sintatica Abstrata - AST
 // Nome: Pedro Caetano de Abreu Teixeira
 // Numero do cartao: 00228509
 
@@ -49,7 +49,7 @@ HASH_NODE *hashInsert(char *text, int type){
 void hashPrint(void){
 	int i;
 	HASH_NODE *node;
-	for (i = 1; i < HASH_SIZE; ++i)
+	for (i = 0; i < HASH_SIZE; ++i)
 		for (node = Table[i]; node; node = node->next)
 			printf("Table[%d] has %s\n", i, node->text);
 }
